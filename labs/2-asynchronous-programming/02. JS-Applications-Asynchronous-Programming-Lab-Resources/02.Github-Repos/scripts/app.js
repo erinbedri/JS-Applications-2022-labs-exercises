@@ -1,7 +1,6 @@
 async function loadRepos() {
 
 	const username = document.getElementById('username').value;
-
 	const url = `https://api.github.com/users/${username}/repos`;
 
 	let list = document.getElementById('repos');
@@ -26,6 +25,6 @@ async function loadRepos() {
 		});
 
 	} catch (error) {
-		list.textContent =  error;
+		list.textContent = error;
 	}
 }
