@@ -16,14 +16,11 @@ async function loadCommits() {
 
 		const data = await res.json();
 
-        console.log(data)
-
         data.forEach(repo => {
             let li = document.createElement('li');
             li.textContent = `${repo.commit.author.name}: ${repo.commit.message}`;
             list.appendChild(li);
         });
-
 
 	} catch (error) {
 		list.textContent = `Error: ${error.status} (Not Found)`;
