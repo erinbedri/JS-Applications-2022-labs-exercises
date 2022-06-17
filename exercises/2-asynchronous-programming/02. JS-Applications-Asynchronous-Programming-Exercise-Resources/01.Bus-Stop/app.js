@@ -1,5 +1,5 @@
 async function getInfo() {
-    
+
     const checkBtn = document.getElementById('submit');
 
     let stopId = document.getElementById('stopId').value;
@@ -12,20 +12,19 @@ async function getInfo() {
         return;
     }
 
-    
     try {
-        checkBtn.disabled = true; 
+        checkBtn.disabled = true;
 
         stopNameElement.textContent = 'Loading...';
         list.replaceChildren();
 
-		const res = await fetch(url);
+        const res = await fetch(url);
 
-		if (res.status != 200) {
-			throw new Error('Incorrect StopID')
-		}
+        if (res.status != 200) {
+            throw new Error('Incorrect StopID')
+        }
 
-		const data = await res.json();
+        const data = await res.json();
         stopNameElement.textContent = data.name;
 
         let busses = data.buses;
@@ -36,9 +35,9 @@ async function getInfo() {
             list.appendChild(li);
         }
 
-        checkBtn.disabled = false; 
-            
-    } catch(error) {
+        checkBtn.disabled = false;
+
+    } catch (error) {
         stopNameElement.textContent = 'Error';
     }
 }
