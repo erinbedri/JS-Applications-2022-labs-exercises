@@ -1,3 +1,47 @@
+function getInfo() {
+
+    const checkBtn = document.getElementById('submit');
+
+    let stopId = document.getElementById('stopId').value;
+    let stopNameElement = document.getElementById('stopName');
+    let list = document.getElementById('buses');
+
+    let url = `http://localhost:3030/jsonstore/bus/businfo/${stopId}`;
+
+    if (stopId == '') {
+        return;
+    }
+
+    checkBtn.disabled = true;
+
+    stopNameElement.textContent = 'Loading...';
+    list.replaceChildren();
+
+    fetch(url)
+        .then(res => {
+            if (res.status != 200) {
+                throw new Error('Incorrect StopID')
+            }
+            return res.json();
+        })
+        .then(data => {
+            stopNameElement.textContent = data.name;
+
+            let busses = data.buses;
+
+            for (const [id, minutes] of Object.entries(busses)) {
+                let li = document.createElement('li');
+                li.textContent = `Bus ${id} arrives in ${minutes} minutes`;
+                list.appendChild(li);
+            }
+            checkBtn.disabled = false;
+        })
+        .catch(error => {
+            stopNameElement.textContent = 'Error';
+        })
+}
+
+/*
 async function getInfo() {
 
     const checkBtn = document.getElementById('submit');
@@ -41,3 +85,4 @@ async function getInfo() {
         stopNameElement.textContent = 'Error';
     }
 }
+*/

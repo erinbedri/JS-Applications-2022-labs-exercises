@@ -6,6 +6,52 @@ function solve() {
 
     let stop = { next: 'depot' };
 
+    function depart() {
+        let url = `http://localhost:3030/jsonstore/bus/schedule/${stop.next}`;
+
+        departBtn.disabled = true;
+        arriveBtn.disabled = false;
+
+        fetch(url)
+            .then(res => {
+                if (res.status != 200) {
+                    throw new Error()
+                }
+                return res.json();
+            })
+            .then(data => {
+                stop = data;
+                infoElement.textContent = `Next stop ${stop.name}`
+            })
+            .catch(error => {
+                console.log('Error');
+            })
+    }
+
+    function arrive() {
+        departBtn.disabled = false;
+        arriveBtn.disabled = true;
+
+        infoElement.textContent = `Arriving at ${stop.name}`;
+    }
+
+    return {
+        depart,
+        arrive
+    };
+}
+
+let result = solve();
+
+/*
+function solve() {
+    const departBtn = document.getElementById('depart');
+    const arriveBtn = document.getElementById('arrive');
+
+    let infoElement = document.getElementsByClassName('info')[0];
+
+    let stop = { next: 'depot' };
+
     async function depart() {
         let url = `http://localhost:3030/jsonstore/bus/schedule/${stop.next}`;
 
@@ -42,3 +88,4 @@ function solve() {
 }
 
 let result = solve();
+*/
