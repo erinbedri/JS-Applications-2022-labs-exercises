@@ -36,7 +36,6 @@ function attachEvents() {
         })
             .then(res => res.json())
             .then(message => {
-                console.log(message)
                 messageArea.textContent += `${message.author}: ${message.content}\n`;
             })
     })
