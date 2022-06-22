@@ -142,3 +142,6 @@ function editBook(e) {
 
     })
 };
+
+// code neeeds to be refactored
+// sometimes behaves unexpectedly when edit function is used
