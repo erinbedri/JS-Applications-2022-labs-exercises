@@ -1,81 +1,96 @@
-window.onload = clearTable;
+let submitForm = document.getElementById('submit-form');
+let editForm = document.getElementById('edit-form');
+let booksTableBody = document.getElementById('books-table-body');
 
+const submitBtn = document.getElementById('submitBtn');
+const saveBtn = document.getElementById('saveBtn');
+const loadBtn = document.getElementById('loadBooks');
 
-let tableBody = document.getElementById('table-body');
-let titleElement = document.querySelector('[name="title"]');
-let authorElement = document.querySelector('[name="author"]');
-let submith3 = document.getElementById('submit-h3');
-let saveh3 = document.getElementById('save-h3');
+let baseUrl = 'http://localhost:3030/jsonstore/collections/books';
 
-let formSubmit = document.getElementById('submit');
-let formSave = document.getElementById('save');
-formSave.style.display = 'none';
+editForm.style.display = 'none';
+booksTableBody.textContent = '';
 
-const url = 'http://localhost:3030/jsonstore/collections/books';
+loadBtn.addEventListener('click', loadBooks);
+submitBtn.addEventListener('click', loadBooks);
+submitBtn.addEventListener('click', addNewBook);
+booksTableBody.addEventListener('click', deleteBook);
+booksTableBody.addEventListener('click', editBook);
+booksTableBody.addEventListener('click', loadBooks);
 
-const loadButton = document.getElementById('loadBooks');
-loadButton.addEventListener('click', loadBooks);
+function loadBooks(e) {
+    //e.preventDefault();
 
-const submitButton = document.getElementById('submitBtn');
-submitButton.addEventListener('click', submitNewBook);
+    booksTableBody.textContent = '';
 
-const saveButton = document.getElementById('saveBtn');
-saveButton.addEventListener('click', editCurrentBook);
-
-function clearTable() {
-    tableBody.textContent = ''; tableBody.textContent = '';
-};
-
-function loadBooks() {
-    tableBody.textContent = '';
-
-    fetch(url)
+    fetch(baseUrl)
         .then(res => res.json())
         .then(data => {
             Object.keys(data).forEach(key => {
                 let tr = document.createElement('tr');
                 tr.dataset.id = key;
 
-                let titleTd = document.createElement('td');
-                titleTd.className = 'book';
-                titleTd.textContent = data[key].title;
-                tr.appendChild(titleTd);
+                let bookNameTd = document.createElement('td');
+                bookNameTd.textContent = data[key].title;
+                bookNameTd.classList.add('titleTd');
+                tr.appendChild(bookNameTd);
 
-                let authorTd = document.createElement('td');
-                authorTd.className = 'author';
-                authorTd.textContent = data[key].author;
-                tr.appendChild(authorTd);
+                let authorNameTd = document.createElement('td');
+                authorNameTd.textContent = data[key].author;
+                authorNameTd.classList.add('authorTd');
+                tr.appendChild(authorNameTd);
 
                 let buttonsTd = document.createElement('td');
 
-                let editButton = document.createElement('button');
-                editButton.id = 'editBtn';
-                buttonsTd.appendChild(editButton);
-                editButton.textContent = 'Edit';
-                editButton.addEventListener('click', editCurrentBook);
+                let editBtn = document.createElement('button');
+                editBtn.classList.add('editBtn');
+                editBtn.textContent = 'Edit';
+                buttonsTd.appendChild(editBtn);
 
-                let deleteButton = document.createElement('button');
-                deleteButton.id = 'deleteBtn';
-                buttonsTd.appendChild(deleteButton);
-                deleteButton.textContent = 'Delete';
-                deleteButton.addEventListener('click', deleteCurrentBook);
+                let deleteBtn = document.createElement('button');
+                deleteBtn.classList.add('deleteBtn');
+                deleteBtn.textContent = 'Delete';
+                buttonsTd.appendChild(deleteBtn);
 
                 tr.appendChild(buttonsTd);
-
-                tableBody.appendChild(tr);
+                booksTableBody.appendChild(tr);
             })
         })
 };
 
-function deleteCurrentBook(event) {
-    let target = event.target;
+function addNewBook(e) {
+    e.preventDefault();
+
+    let titleInputElement = document.getElementById('submit-title-input');
+    let authorInputElement = document.getElementById('submit-author-input');
+
+    if (titleInputElement.value != '' && authorInputElement.value != '') {
+        let newBookEntry = {
+            "author": authorInputElement.value,
+            "title": titleInputElement.value
+        }
+
+        fetch(baseUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newBookEntry)
+        })
+
+
+        titleInputElement.value = '';
+        authorInputElement.value = '';
+    }
+};
+
+function deleteBook(e) {
+    let target = e.target;
     let bookId = target.parentElement.parentElement.getAttribute('data-id');
 
-    if (target.id != 'deleteBtn') return;
+    if (target.className != 'deleteBtn') return;
 
-    fetch(`${url}/${bookId}`, {
+    fetch(`${baseUrl}/${bookId}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'content-type': 'application/json' },
         body: JSON.stringify(bookId)
     })
         .then(res => res.json())
@@ -83,58 +98,47 @@ function deleteCurrentBook(event) {
     target.parentElement.parentElement.remove();
 };
 
-function editCurrentBook(event) {
-    let target = event.target;
-    let parent = target.parentElement.parentElement;
+function editBook(e) {
+    e.preventDefault();
+
+    submitForm.style.display = 'none';
+    editForm.style.display = 'block';
+
+    let target = e.target;
     let bookId = target.parentElement.parentElement.getAttribute('data-id');
 
-    formSubmit.style.display = 'none';
-    formSave.style.display = 'block'
+    let authorInputElement = document.getElementById('edit-author-input');
+    let titleInputElement = document.getElementById('edit-title-input');
+    
+    titleInputElement.value = document.querySelector(`tr[data-id="${bookId}"]`).querySelector('.titleTd').textContent;
+    authorInputElement.value = document.querySelector(`tr[data-id="${bookId}"]`).querySelector('.authorTd').textContent;
 
-    if (target.id != 'editBtn') return;
-
-    titleElement.value = parent.querySelector('.book').textContent;
-    authorElement.value = parent.querySelector('.author').textContent;
-
-    let updatedEntry = {
-        "author": parent.querySelector('.author').textContent,
-        "title": parent.querySelector('.book').textContent
-    }
-
-
-    fetch(`${url}/${bookId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedEntry)
-    })
-        .then(res => res.json())
-
-    h3.textContent = 'FORM';
-    submitButton.textContent = 'Submit';
-    loadBooks();
-}
-
-
-function submitNewBook(event) {
-    event.preventDefault();
-
-    if (titleElement.value != '' && authorElement.value != '') {
-
-        let newBook = {
-            "author": authorElement.value,
-            "title": titleElement.value
+    //if (target.className != 'saveBtn') return;
+    
+    saveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        let editedBook = {
+            "author": authorInputElement.value,
+            "title": titleInputElement.value
         }
 
-        fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newBook)
+        fetch(`${baseUrl}/${bookId}`, {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(editedBook)
         })
             .then(res => res.json())
+            .then(data => {
+                console.log(data)
+            })
 
-        titleElement.value = '';
-        authorElement.value = '';
-        deleteCurrentBook();
-        loadBooks();
-    }
-}
+        titleInputElement.value = '';
+        authorInputElement.value = '';
+
+        loadBooks()
+        submitForm.style.display = 'block';
+        editForm.style.display = 'none';
+
+    })
+};

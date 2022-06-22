@@ -9,7 +9,7 @@
 </head>
 <body>
     <button id="loadBooks">LOAD ALL BOOKS</button>
-    <table id="table-books">
+    <table id="books-table">
         <thead>
             <tr>
                 <th>Title</th>
@@ -17,7 +17,7 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody id="table-body">
+        <tbody id="books-table-body">
             <tr>
                 <td>Harry Poter</td>
                 <td>J. K. Rowling</td>
@@ -37,23 +37,24 @@
         </tbody>
     </table>
 
-    <form id="submit">
-        <h3 id="submit-h3">FORM</h3>
+    <form id="submit-form">
+        <h3>FORM</h3>
         <label>TITLE</label>
-        <input type="text" name="title" placeholder="Title...">
+        <input id="submit-title-input" type="text" name="title" placeholder="Title...">
         <label>AUTHOR</label>
-        <input type="text" name="author" placeholder="Author...">
-        <button id="submitBtn">Submit</button>
+        <input id="submit-author-input" type="text" name="author" placeholder="Author...">
+        <button id="submitBtn" >Submit</button>
     </form>
 
-    <form id="save">
-        <h3 id="save-h3">Edit FORM</h3>
+    <form id="edit-form">
+        <h3>Edit FORM</h3>
         <label>TITLE</label>
-        <input type="text" name="title" placeholder="Title...">
+        <input id="edit-title-input" type="text" name="title" placeholder="Title...">
         <label>AUTHOR</label>
-        <input type="text" name="author" placeholder="Author...">
+        <input id="edit-author-input" type="text" name="author" placeholder="Author...">
         <button id="saveBtn">Save</button>
     </form>
+
     <script src="./app.js"></script>
 </body>
 </html>
