@@ -11,13 +11,19 @@ loadMovies();
 
 function loadMovies() {
     fetch('http://localhost:3030/data/movies')
-        .then(res => res.json())
+        .then(res => {
+            if (res.status != 200) {
+                throw new Error('Data cannot be fetch from Server')
+            }
+            return res.json()
+        })
         .then(movies => {
             movies.forEach(movie => {
                 let currentMovie = createHtmlElement(movie);
                 moviesList.appendChild(currentMovie);
             });
         })
+        .catch(error => alert(error.message));
 }
 
 function createHtmlElement(movie) {
@@ -35,6 +41,6 @@ function createHtmlElement(movie) {
                     <button data-id="${movie._id}" type="button" class="btn btn-info">Details</button>
                 </a>
             </div>`;
-    
+
     return element;
 }
