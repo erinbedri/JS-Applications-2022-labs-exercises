@@ -7,14 +7,18 @@ export function homePage() {
     showView(section);
 }
 
-fetch('http://localhost:3030/data/movies')
-    .then(res => res.json())
-    .then(movies => {
-        movies.forEach(movie => {
-            let currentMovie = createHtmlElement(movie);
-            moviesList.appendChild(currentMovie);
-        });
-    })
+loadMovies();
+
+function loadMovies() {
+    fetch('http://localhost:3030/data/movies')
+        .then(res => res.json())
+        .then(movies => {
+            movies.forEach(movie => {
+                let currentMovie = createHtmlElement(movie);
+                moviesList.appendChild(currentMovie);
+            });
+        })
+}
 
 function createHtmlElement(movie) {
     let element = document.createElement('div');
