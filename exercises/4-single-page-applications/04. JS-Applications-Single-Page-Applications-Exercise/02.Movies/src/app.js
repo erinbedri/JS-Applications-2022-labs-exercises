@@ -23,14 +23,12 @@ function onNavigate(event) {
         const view = routes[url.pathname];
 
         if (typeof view == 'function') {
-            console.log(event.target)
             view();
         }
     }
 }
 
 function logout() {
-    console.log('logging out');
     updateNav();
 }
 
