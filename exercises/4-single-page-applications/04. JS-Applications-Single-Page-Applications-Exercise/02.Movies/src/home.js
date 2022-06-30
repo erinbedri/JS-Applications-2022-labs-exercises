@@ -1,15 +1,17 @@
-import { showView } from "./util.js";
+import { showView, spinner } from "./util.js";
 
 const section = document.querySelector('#home-page');
 let moviesList = section.querySelector('.card-deck.d-flex.justify-content-center')
 
 export function homePage() {
     showView(section);
+    loadMovies();
 }
 
-loadMovies();
 
 function loadMovies() {
+    moviesList.replaceChildren(spinner());
+
     fetch('http://localhost:3030/data/movies')
         .then(res => {
             if (res.status != 200) {
@@ -18,6 +20,7 @@ function loadMovies() {
             return res.json()
         })
         .then(movies => {
+            moviesList.replaceChildren();
             movies.forEach(movie => {
                 let currentMovie = createHtmlElement(movie);
                 moviesList.appendChild(currentMovie);
