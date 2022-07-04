@@ -1,5 +1,5 @@
 import { homePage } from "./home.js";
-import { showView, spinner } from "./util.js";
+import { showView } from "./util.js";
 
 const section = document.querySelector('#add-movie');
 const submitBtn = section.querySelector('#submitBtn');
