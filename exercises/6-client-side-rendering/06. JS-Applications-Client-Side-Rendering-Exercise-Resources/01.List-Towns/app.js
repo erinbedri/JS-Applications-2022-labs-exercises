@@ -4,12 +4,9 @@ const loadBtn = document.getElementById('btnLoadTowns');
 loadBtn.addEventListener('click', onClick);
 
 const template = (data) => html`
-        <ul>
-            ${data.map(city => html`
-            <li>
-                ${city}
-            </li>`)}
-        </ul>
+        <ul>${
+            data.map(city => html`<li>${city}</li>`)
+        }</ul>
 `
 
 function onClick(e) {
