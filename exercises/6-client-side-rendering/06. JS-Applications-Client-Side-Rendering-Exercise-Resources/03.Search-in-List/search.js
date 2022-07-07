@@ -2,7 +2,6 @@ import { render, html } from '../../../../node_modules/lit-html/lit-html.js';
 import { towns } from './towns.js';
 
 let body = document.body;
-let number;
 
 let initialState = (data) => html`
       <article>
@@ -19,47 +18,24 @@ let initialState = (data) => html`
 
 render(initialState(towns), body);
 
-let templateSearch = (data) => html`
+let templateSearch = (data, searched) => html`
       <article>
          <div id="towns">
             <ul>${
-               data.map(city => html`<li>${city}</li>`)
+               data.map(city => html`<li class=${city.toLowerCase().includes(searched) ? 'active' : ''}>${city}</li>`)
             }</ul>
          </div>
          <input type="text" id="searchText" />
          <button @click="${search}">Search</button>
-         <div id="result">${number} matches found</div>
+         <div id="result">${data.filter(city => city.toLowerCase().includes(searched)).length} matches found</div>
       </article>
 `
 
 function search() {
    let searchElement = document.getElementById('searchText');
-   let number = 5
+   let searchValue = document.getElementById('searchText').value;
    
-   render(templateSearch(towns), body);
+   render(templateSearch(towns, searchValue.toLowerCase()), body);
 
    searchElement.value = '';
 }
-
-/*
-const townsList = document.getElementById('towns');
-const searchBtn = document.querySelector('button');
-
-searchBtn.addEventListener('click', search);
-
-let template = (data) => html`
-        <ul>${
-            data.map(city => html`<li>${city}</li>`)
-        }</ul>
-`
-render(template(towns), townsList);
-
-function search() {
-   let searchElement = document.getElementById('searchText');
-   let matchesElement = document.getElementById('result');
-
-   console.log(searchElement.value)
-
-   searchElement.value = '';
-}
-*/
